@@ -1,0 +1,67 @@
+Open cmd
+1. Start mongo
+> mongo
+
+2. show database name
+> show dbs
+
+3. create New database / and haven then open it / also select db
+> use database_name
+Note: database ka name tbhi show hoga agr us me koi aik document hoga
+
+4. Create collection of document only one
+> db.collection_name.insertOne({name:"ali", class:"Mcs", marks:505})
+4.1 create multiple documents in collection
+> db.collection_name,insertMany([ {name:"usman", class:"bcs", age:24}, {}, {} ])
+
+5. which current active DB
+> db
+
+6. check how many collection in DB
+> show collections
+
+7. how many records in collection / or check documents
+> db.collection_Name.find().pretty()
+
+CRUD operation
+syntax:
+db.collection.find(query,projection)
+
+8. show specific documents in a collection
+> db.collection_Name.find({field_name: "value"})
+
+9. see only one specific field in a spectific document
+> db.collection_Name.find({field_name: "value"}, {name=1}) //1 mean true,yani show kro, 0 mean false,yani ye field k ilawa show kro.
+Example
+> db.student.find({class: "Msc"}, {_id:0, name:1}).pretty()
+Output
+{ "name" : "Ali" }
+
+10. filter or limit only matach starting
+> db.student.find({class: "Msc"}).pretty().limit(1) // yani first jo filed match kr jaye 1 wo bs show kro MSC ki
+Note: 1 ki jaga jitni value likhy gy untni match hoje gh to show kry ga.
+same other way:
+> db.student.findOne({class: "Msc"})
+
+11. skip first documents after match other one only of query
+> db.student.find({class: "Msc"}).pretty().limit(1).skip(1)
+
+Update functions syntax
+UpdateOne => db.collection_name.updateOne(<filter>,<update>)
+UpdateMany => db.collection_name.update(<filter>,<update>)
+
+12.  upadate the class field value the student name of Raza
+upade only one field
+> db.document_name.updateOne({name:"Raza"}, {$set: {class:"B.com"} })
+update many field 
+> db.student.updateMany({class:"B.com"}, {$set: {age:29} })
+
+Delete operations
+syntax:
+deleteMany() =>db.collection_name.deleteMany(Delete_critteria)
+
+13. delete filed with the age matches "25"
+> db.document_name.deleteMany({age:25})
+
+14. delete all documents
+db.document_name.deleteMany()
