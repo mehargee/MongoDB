@@ -4,12 +4,12 @@ const app = express();
 
 const main = async () => {
   try {
-    // Connect to MongoDB
-    const mongoConnect = await mongoose.connect('mongodb://localhost:27017/myapp', {
+    // Connect to MongoDB   default path-> //mongodb:localhost:27017
+    const mongoConnect = await mongoose.connect('mongodb://0.0.0.0:27017/myapp', {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
-    console.log('MongoDB connected...');
+    console.log('MongoDB connected sucessfully...');
 
     // Define a schema for the practice collection
     const practiceSchema = new mongoose.Schema({
@@ -26,20 +26,64 @@ const main = async () => {
     // Define a model for the practice collection
     const Practice = mongoose.model('Practice', practiceSchema);
 
-    // Create a new instance of the model and save it to the collection
-    const practice = new Practice({
-      name: 'Usman',
+
+    // read operation or read documents
+    const getdocuments = async () => {
+      // const result = await Practice.find();
+      // fillter data and select only first field and show // limit yani 10 is age k hote to 1 show krta
+      const result = await Practice
+       // .find({ age: 34 })
+      //comparision operator use($gt,$gte,$lt,$lte,$in)
+    //  .find({ age: {$gt : 30} }) // ye sirf usy sow kry ga jinki age > 30 hai
+     // .find({ age: {$in : [30] }}) // $in mean match the value, ye array me value lyta ha
+      //logical operator ($or, $and, $nor, $not)  
+      .find({ $or: [{age : 30} , {name : "Sania"}] }) // take array 
+      .select({ name: 1 })
+     //   .limit(1);
+      console.log(result);
+    }
+    getdocuments();
+
+    // Create a new instance of the model and save it to the collection and insert documents
+    const practice1 = new Practice({
+      name: 'Saeed',
       age: 30
     });
-    await practice.save();
-    console.log('Data saved to practice collection...');
+
+    const practice2 = new Practice({
+      name: 'Shafiq',
+      age: 34
+    });
+
+    const practice3 = new Practice({
+      name: 'Sapna',
+      age: 36
+    });
+
+    const practice4 = new Practice({
+      name: 'Sania',
+      age: 32
+    });
+    // inserting documents in collection one or many
+    // await practice.save();
+    //   await Practice.insertMany([practice1,practice2,practice3,practice4]);
+    // console.log('Data saved to practice collection...');
 
   } catch (error) {
     console.log('Error:', error);
   }
+
+
 };
 
+
+
+
 main();
+
+
+
+
 
 // Middleware function to handle home page
 app.get('/', (req, res) => {
