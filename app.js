@@ -38,11 +38,32 @@ const main = async () => {
      // .find({ age: {$in : [30] }}) // $in mean match the value, ye array me value lyta ha
       //logical operator ($or, $and, $nor, $not)  
       .find({ $or: [{age : 30} , {name : "Sania"}] }) // take array 
-      .select({ name: 1 })
+      .select({ age: 1 })
+      .sort({name : -1})        //1 is asscending -1 decensending
+     // .countDocuments(); // how many documents are there
      //   .limit(1);
       console.log(result);
     }
-    getdocuments();
+   // getdocuments();
+    const updateDocument = async (id) => {
+      try {
+        const result = await Practice.findByIdAndUpdate({_id : id} , { 
+          $set : 
+          {name : "Hussain gee"} 
+        },
+        {
+          new: true   // jo new value updat ki hai usy show kry.
+        })
+        console.log("document updated sucessfully...")
+        console.log(result);
+      } 
+      catch (error) {
+        console.log(error);
+      }   
+     
+    }
+
+    updateDocument("644fd5e74a7011c25ef4dbed");
 
     // Create a new instance of the model and save it to the collection and insert documents
     const practice1 = new Practice({
