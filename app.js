@@ -1,3 +1,4 @@
+const { log } = require('console');
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
@@ -15,11 +16,28 @@ const main = async () => {
     const practiceSchema = new mongoose.Schema({
       name: {
         type: String,
-        required: true
+        required: true,
+        lowercase: true,  //validation
+        trim: true,
+       // uppercase: true,
+        minlength: 2,
+        maxlength: 20,
+        
+      },
+      class: {
+          type: String,
+          enum: ["Msc" , "MA", "Mcom"], //yani class ki value bs in me se 1 hogi
+          require: true,
       },
       age: {
         type: Number,
-        required: true
+        required: true,
+        //custom validation
+        validate(value){
+          if(value < 0){
+            throw new Error("age should be greater than 0")
+          }
+        }
       }
     });
 
@@ -41,7 +59,7 @@ const main = async () => {
       .select({ age: 1 })
       .sort({name : -1})        //1 is asscending -1 decensending
      // .countDocuments(); // how many documents are there
-     //   .limit(1);
+     //   .limit(1); 
       console.log(result);
     }
    // getdocuments();
@@ -62,8 +80,20 @@ const main = async () => {
       }   
      
     }
+//    updateDocument("644fd5e74a7011c25ef4dbed");
 
-    updateDocument("644fd5e74a7011c25ef4dbed");
+   // delete documents
+    const deleteDocument = async (_id) => {
+      try {                          //findByIdAndDelete ye many k liye
+        const result = await Practice.deleteOne({ _id }); // { _id : _id } 
+        console.log(result) 
+      } 
+      catch (error) {
+        console.log(error);
+      }  
+    }
+
+   // deleteDocument("645297379bccaefff49770d8");
 
     // Create a new instance of the model and save it to the collection and insert documents
     const practice1 = new Practice({
@@ -82,13 +112,16 @@ const main = async () => {
     });
 
     const practice4 = new Practice({
-      name: 'Sania',
-      age: 32
+      name: 'upparcase',
+      age: 12,
+      class: "Msc"
     });
     // inserting documents in collection one or many
     // await practice.save();
     //   await Practice.insertMany([practice1,practice2,practice3,practice4]);
-    // console.log('Data saved to practice collection...');
+   const result = await Practice.insertMany([practice4]);
+    console.log(result);  
+   console.log('Data saved in practice collection...');
 
   } catch (error) {
     console.log('Error:', error);
