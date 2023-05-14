@@ -1,5 +1,6 @@
 const { log } = require('console');
 const express = require('express');
+const validator = require('validator');
 const mongoose = require('mongoose');
 const app = express();
 
@@ -28,6 +29,16 @@ const main = async () => {
           type: String,
           enum: ["Msc" , "MA", "Mcom"], //yani class ki value bs in me se 1 hogi
           require: true,
+      },
+      email: {
+        type: String,
+        required: true,
+        unique: true,
+        validate(value){
+         if(!validator.isEmail(value)){
+            throw new Error('Email is inValid');
+         } 
+        }
       },
       age: {
         type: Number,
@@ -114,7 +125,8 @@ const main = async () => {
     const practice4 = new Practice({
       name: 'upparcase',
       age: 12,
-      class: "Msc"
+      class: "Msc",
+      email: "abcd@gmail.com"
     });
     // inserting documents in collection one or many
     // await practice.save();
